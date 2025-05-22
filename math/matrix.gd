@@ -17,7 +17,6 @@ func set_arr(arr: Array) -> void:
 	for i in range(arr.size()):
 		self.arr[i] = arr[i]
 
-
 static func add(m1: Matrix, m2: Matrix) -> Matrix:
 	assert(m1.arr.size() == m2.arr.size())
 	var result: Matrix = Matrix.new(m1.c, m1.r)

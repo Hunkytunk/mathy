@@ -12,7 +12,7 @@ var u = [Vector2(1,0), Vector2(0,1)]
 func _ready() -> void:
 	if center_origo:
 		origo = Vector2(floor(get_viewport_rect().size.x/2), floor(get_viewport_rect().size.y/2))
-	var matrix = Matrix.new(2,2)
+	var matrix = Matrix2D.new()
 	print(matrix.arr)
 	matrix.set_arr([1,2,3,4])
 	print(matrix.arr)
