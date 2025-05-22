@@ -8,17 +8,23 @@ func _init() -> void:
 	for i in range(arr.size()):
 		arr[i] = 0
 
-func set_arr(arr: PackedFloat64Array):
+func set_arr(arr: PackedFloat64Array) -> void:
 	assert(self.arr.size() == arr.size())
 	for i in range(self.arr.size()):
 		self.arr[i] = arr[i]
+
+func set_arr_vec(v1: Vector2, v2: Vector2) -> void:
+	arr[0] = v1.x
+	arr[1] = v1.y
+	arr[2] = v2.x
+	arr[3] = v2.y
 
 func at(c: int, r: int) -> float:
 	assert(0 <= c and c <= 1 and 0 <= r and r <= 1)
 	var i = c*2+r
 	return arr[i]
 
-func print_matrix():
+func print_matrix() -> void:
 	var result: String = ""
 	for r in range(2):
 		for c in range(2):

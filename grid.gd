@@ -14,7 +14,7 @@ func _ready() -> void:
 		origo = Vector2(floor(get_viewport_rect().size.x/2), floor(get_viewport_rect().size.y/2))
 	var matrix = Matrix2D.new()
 	matrix.print_matrix()
-	matrix.set_arr([1,2,3,4])
+	matrix.set_arr_vec(Vector2(1,2), Vector2(3,4))
 	matrix.print_matrix()
 
 func global_to_u(point: Vector2):
