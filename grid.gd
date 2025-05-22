@@ -13,6 +13,8 @@ func _ready() -> void:
 	if center_origo:
 		origo = Vector2(floor(get_viewport_rect().size.x/2), floor(get_viewport_rect().size.y/2))
 	print(origo)
+	var matrix = Matrix.new()
+	print(matrix.mordi)
 
 func global_to_u(point: Vector2):
 	var op = (point-origo)/pixel_per_unit
