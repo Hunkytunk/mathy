@@ -23,6 +23,11 @@ func at(c: int, r: int) -> float:
 	assert(0 <= c and c <= 1 and 0 <= r and r <= 1)
 	var i = c*2+r
 	return arr[i]
+	
+func at_c(c: int, r: int, val: float) -> void:
+	assert(0 <= c and c <= 1 and 0 <= r and r <= 1)
+	var i = c*2+r
+	arr[i] = val
 
 func print_matrix() -> void:
 	var result: String = ""
@@ -38,4 +43,14 @@ static func add(m1: Matrix2D, m2: Matrix2D) -> Matrix2D:
 	var result: Matrix2D = Matrix2D.new()
 	for i in range(m1.arr.size()):
 		result.arr[i] = m1.arr[i] + m2.arr[i]
+	return result
+
+static func mult(m1: Matrix2D, m2: Matrix2D) -> Matrix2D:
+	assert(m1.arr.size() == m2.arr.size())
+	var result: Matrix2D = Matrix2D.new()
+	for r in range(2):
+		for i in range(2):
+			for c in range(2):
+				var val: float = m1.at(c, r) + m2.at(r+i, c) #Dette er feil
+				result.at_c(c, r, val)
 	return result
