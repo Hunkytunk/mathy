@@ -12,10 +12,14 @@ var u = [Vector2(1,0), Vector2(0,1)]
 func _ready() -> void:
 	if center_origo:
 		origo = Vector2(floor(get_viewport_rect().size.x/2), floor(get_viewport_rect().size.y/2))
-	var matrix = Matrix2D.new()
-	matrix.print_matrix()
-	matrix.set_arr_vec(Vector2(1,2), Vector2(3,4))
-	matrix.print_matrix()
+	var m1 = Matrix2D.new()
+	m1.set_arr_vec(Vector2(1,2), Vector2(3,4))
+	m1.print_matrix()
+	var m2 = Matrix2D.new()
+	m2.set_arr_vec(Vector2(5,4), Vector2(3,4))
+	m2.print_matrix()
+	var m3: Matrix2D = Matrix2D.mult(m1, m2)
+	m3.print_matrix()
 
 func global_to_u(point: Vector2):
 	var op = (point-origo)/pixel_per_unit

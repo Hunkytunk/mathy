@@ -49,8 +49,9 @@ static func mult(m1: Matrix2D, m2: Matrix2D) -> Matrix2D:
 	assert(m1.arr.size() == m2.arr.size())
 	var result: Matrix2D = Matrix2D.new()
 	for r in range(2):
-		for i in range(2):
-			for c in range(2):
-				var val: float = m1.at(c, r) + m2.at(r+i, c) #Dette er feil
-				result.at_c(c, r, val)
+		for c in range(2):
+			var val: float = 0.0
+			for i in range(2):
+				val += m1.at(i, r) * m2.at(c, i)
+			result.at_c(c, r, val)
 	return result
