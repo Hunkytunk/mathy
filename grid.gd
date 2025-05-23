@@ -14,12 +14,16 @@ func _ready() -> void:
 		origo = Vector2(floor(get_viewport_rect().size.x/2), floor(get_viewport_rect().size.y/2))
 	var m1 = Matrix2D.new()
 	m1.set_arr_vec(Vector2(1,2), Vector2(3,4))
-	m1.print_matrix()
+	m1.print_mat()
 	var m2 = Matrix2D.new()
 	m2.set_arr_vec(Vector2(5,4), Vector2(3,4))
-	m2.print_matrix()
-	var m3: Matrix2D = Matrix2D.mult(m1, m2)
-	m3.print_matrix()
+	m2.print_mat()
+	var m3: Matrix2D = Matrix2D.mult_mat(m1, m2)
+	m3.print_mat()
+	var m4: Matrix2D = m3.inverse()
+	m4.print_mat()
+	var m5: Matrix2D = Matrix2D.mult_mat(m3, m4)
+	m5.print_mat()
 
 func global_to_u(point: Vector2):
 	var op = (point-origo)/pixel_per_unit

@@ -8,10 +8,10 @@ func _init() -> void:
 	for i in range(arr.size()):
 		arr[i] = 0
 
-func set_arr(arr: PackedFloat64Array) -> void:
-	assert(self.arr.size() == arr.size())
-	for i in range(self.arr.size()):
-		self.arr[i] = arr[i]
+func set_arr(new_arr: PackedFloat64Array) -> void:
+	assert(arr.size() == new_arr.size())
+	for i in range(arr.size()):
+		arr[i] = new_arr[i]
 
 func set_arr_vec(v1: Vector2, v2: Vector2) -> void:
 	arr[0] = v1.x
@@ -29,7 +29,16 @@ func at_c(c: int, r: int, val: float) -> void:
 	var i = c*2+r
 	arr[i] = val
 
-func print_matrix() -> void:
+func inverse() -> Matrix2D:
+	var result: Matrix2D = Matrix2D.new()
+	var fac: float = 1/(at(0,0)*at(1,1)-at(1,0)*at(0,1))
+	result.at_c(0,0, fac*at(1,1))
+	result.at_c(0,1, -fac*at(0,1))
+	result.at_c(1,0, -fac*at(1,0))
+	result.at_c(1,1, fac*at(0,0))
+	return result
+
+func print_mat() -> void:
 	var result: String = ""
 	for r in range(2):
 		for c in range(2):
@@ -45,7 +54,7 @@ static func add(m1: Matrix2D, m2: Matrix2D) -> Matrix2D:
 		result.arr[i] = m1.arr[i] + m2.arr[i]
 	return result
 
-static func mult(m1: Matrix2D, m2: Matrix2D) -> Matrix2D:
+static func mult_mat(m1: Matrix2D, m2: Matrix2D) -> Matrix2D:
 	assert(m1.arr.size() == m2.arr.size())
 	var result: Matrix2D = Matrix2D.new()
 	for r in range(2):
@@ -54,4 +63,10 @@ static func mult(m1: Matrix2D, m2: Matrix2D) -> Matrix2D:
 			for i in range(2):
 				val += m1.at(i, r) * m2.at(c, i)
 			result.at_c(c, r, val)
+	return result
+
+static func mult_vec(m: Matrix2D, v: Vector2) -> Vector2:
+	var result: Vector2 = Vector2(0,0)
+	result.x = m.at(0,0)*v.x+m.at(1,0)*v.y
+	result.y = m.at(0,1)*v.x+m.at(1,1)*v.y
 	return result
