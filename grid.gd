@@ -2,34 +2,35 @@ extends Node2D
 
 #const RECT = Vector2(20, 20)
 #var RECT_SIZE : Vector2
-@export var pixel_per_unit: int
+@export var pixel_per_unit: int = 20
 @export_group("Origo")
-@export var center_origo : bool
-@export var origo : Vector2
-var u = [Vector2(1,0), Vector2(0,1)]
-
+@export var center_origo: bool = true
+@export var origo: Vector2
+var u_basis: Matrix2D = Matrix2D.new()
+var u_basis_inv: Matrix2D
 
 func _ready() -> void:
+	u_basis.set_arr_vec(Vector2(1,0), Vector2(0,-1))
+	u_basis_inv = u_basis.inverse()
 	if center_origo:
 		origo = Vector2(floor(get_viewport_rect().size.x/2), floor(get_viewport_rect().size.y/2))
-	var m1 = Matrix2D.new()
-	m1.set_arr_vec(Vector2(1,2), Vector2(3,4))
-	m1.print_mat()
-	var m2 = Matrix2D.new()
-	m2.set_arr_vec(Vector2(5,4), Vector2(3,4))
-	m2.print_mat()
-	var m3: Matrix2D = Matrix2D.mult_mat(m1, m2)
-	m3.print_mat()
-	var m4: Matrix2D = m3.inverse()
-	m4.print_mat()
-	var m5: Matrix2D = Matrix2D.mult_mat(m3, m4)
-	m5.print_mat()
 
-func global_to_u(point: Vector2):
+func global_to_u(point: Vector2) -> Vector2:
 	var op = (point-origo)/pixel_per_unit
+	return u_basis_inv.mult_vec(op)
 	
+func u_to_global(point: Vector2) -> Vector2:
+	var op_u = u_basis.mult_vec(point)
+	return op_u*pixel_per_unit+origo
 
+func _draw() -> void:
+	draw_circle(origo, 5, Color.AQUAMARINE)
+	draw_grid()
 
+func draw_grid():
+	var screen_size_u: Vector2 = get_viewport_rect().size/pixel_per_unit
+	screen_size_u = Vector2(ceil(screen_size_u.x), ceil(screen_size_u.y))
+	print(screen_size_u)
 
 #func _ready() -> void:
 	#origo = Vector2(floor(get_viewport_rect().size.x/2), floor(get_viewport_rect().size.y/2))

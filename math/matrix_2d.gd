@@ -29,6 +29,9 @@ func at_c(c: int, r: int, val: float) -> void:
 	var i = c*2+r
 	arr[i] = val
 
+func at_v(c: int) -> Vector2:
+	return Vector2(at(c, 0), at(c, 1))
+
 func inverse() -> Matrix2D:
 	var result: Matrix2D = Matrix2D.new()
 	var fac: float = 1/(at(0,0)*at(1,1)-at(1,0)*at(0,1))
@@ -43,7 +46,8 @@ func print_mat() -> void:
 	for r in range(2):
 		for c in range(2):
 			result += str(at(c, r)) + " "
-		result += "\n"
+		if not r == 1:
+			result += "\n"
 	print(result)
 	
 
@@ -52,6 +56,12 @@ static func add(m1: Matrix2D, m2: Matrix2D) -> Matrix2D:
 	var result: Matrix2D = Matrix2D.new()
 	for i in range(m1.arr.size()):
 		result.arr[i] = m1.arr[i] + m2.arr[i]
+	return result
+
+func mult_vec(v: Vector2) -> Vector2:
+	var result: Vector2 = Vector2(0,0)
+	result.x = at(0,0)*v.x+at(1,0)*v.y
+	result.y = at(0,1)*v.x+at(1,1)*v.y
 	return result
 
 static func mult_mat(m1: Matrix2D, m2: Matrix2D) -> Matrix2D:
@@ -63,10 +73,4 @@ static func mult_mat(m1: Matrix2D, m2: Matrix2D) -> Matrix2D:
 			for i in range(2):
 				val += m1.at(i, r) * m2.at(c, i)
 			result.at_c(c, r, val)
-	return result
-
-static func mult_vec(m: Matrix2D, v: Vector2) -> Vector2:
-	var result: Vector2 = Vector2(0,0)
-	result.x = m.at(0,0)*v.x+m.at(1,0)*v.y
-	result.y = m.at(0,1)*v.x+m.at(1,1)*v.y
 	return result
