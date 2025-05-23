@@ -29,8 +29,27 @@ func _draw() -> void:
 
 func draw_grid():
 	var screen_size_u: Vector2 = get_viewport_rect().size/pixel_per_unit
-	screen_size_u = Vector2(ceil(screen_size_u.x), ceil(screen_size_u.y))
+	screen_size_u = Vector2(screen_size_u.x, screen_size_u.y)
+	
+	var size_u1: int
+	if u_basis.at(0, 0) == 0:
+		size_u1 = ceil(screen_size_u.y/u_basis.at(0, 1))
+	elif u_basis.at(0, 1) == 0:
+		size_u1 = ceil(screen_size_u.x/u_basis.at(0, 0))
+	else:
+		size_u1 = min(ceil(screen_size_u.x/u_basis.at(0, 0)), ceil(screen_size_u.y/u_basis.at(0, 1)))
+		
+	var size_u2: int
+	if u_basis.at(1, 0) == 0:
+		size_u2 = ceil(screen_size_u.y/u_basis.at(1, 1))
+	elif u_basis.at(1, 1) == 0:
+		size_u2 = ceil(screen_size_u.x/u_basis.at(1, 0))
+	else:
+		size_u2 = min(ceil(screen_size_u.x/u_basis.at(1, 0)), ceil(screen_size_u.y/u_basis.at(1, 1)))
+	#var size_u2: int = min(ceil(screen_size_u.x/u_basis.at(1, 0)), ceil(screen_size_u.y/u_basis.at(1, 1)))
 	print(screen_size_u)
+	print(size_u1)
+	print(size_u2)
 
 #func _ready() -> void:
 	#origo = Vector2(floor(get_viewport_rect().size.x/2), floor(get_viewport_rect().size.y/2))
