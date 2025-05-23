@@ -3,6 +3,7 @@ extends Node2D
 #const RECT = Vector2(20, 20)
 #var RECT_SIZE : Vector2
 @export var pixel_per_unit: int = 20
+@export var line_thickness: int = 2
 @export_group("Origo")
 @export var center_origo: bool = true
 @export var origo: Vector2
@@ -25,6 +26,8 @@ func u_to_global(point: Vector2) -> Vector2:
 
 func _draw() -> void:
 	draw_circle(origo, 5, Color.AQUAMARINE)
+	draw_line(origo, u_to_global(u_basis.get_col(0)), Color.AQUAMARINE, 2.0)
+	draw_line(origo, u_to_global(u_basis.get_col(1)), Color.AQUAMARINE, 2.0)
 	draw_grid()
 
 func draw_grid():
@@ -33,20 +36,23 @@ func draw_grid():
 	
 	var size_u1: int
 	if u_basis.at(0, 0) == 0:
-		size_u1 = ceil(screen_size_u.y/u_basis.at(0, 1))
+		size_u1 = abs(ceil(screen_size_u.y/u_basis.at(0, 1)))
 	elif u_basis.at(0, 1) == 0:
-		size_u1 = ceil(screen_size_u.x/u_basis.at(0, 0))
+		size_u1 = abs(ceil(screen_size_u.x/u_basis.at(0, 0)))
 	else:
-		size_u1 = min(ceil(screen_size_u.x/u_basis.at(0, 0)), ceil(screen_size_u.y/u_basis.at(0, 1)))
+		size_u1 = min(abs(ceil(screen_size_u.x/u_basis.at(0, 0))), abs(ceil(screen_size_u.y/u_basis.at(0, 1))))
 		
 	var size_u2: int
 	if u_basis.at(1, 0) == 0:
-		size_u2 = ceil(screen_size_u.y/u_basis.at(1, 1))
+		size_u2 = abs(ceil(screen_size_u.y/u_basis.at(1, 1)))
 	elif u_basis.at(1, 1) == 0:
-		size_u2 = ceil(screen_size_u.x/u_basis.at(1, 0))
+		size_u2 = abs(ceil(screen_size_u.x/u_basis.at(1, 0)))
 	else:
-		size_u2 = min(ceil(screen_size_u.x/u_basis.at(1, 0)), ceil(screen_size_u.y/u_basis.at(1, 1)))
-	#var size_u2: int = min(ceil(screen_size_u.x/u_basis.at(1, 0)), ceil(screen_size_u.y/u_basis.at(1, 1)))
+		size_u2 = min(abs(ceil(screen_size_u.x/u_basis.at(1, 0))), abs(ceil(screen_size_u.y/u_basis.at(1, 1))))
+	
+	var u = -size_u1*u_basis.get_col(0)
+	for i in range(size_u1*2-1):
+		pass
 	print(screen_size_u)
 	print(size_u1)
 	print(size_u2)

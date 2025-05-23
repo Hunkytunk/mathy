@@ -24,21 +24,21 @@ func at(c: int, r: int) -> float:
 	var i = c*2+r
 	return arr[i]
 	
-func at_c(c: int, r: int, val: float) -> void:
+func insert(c: int, r: int, val: float) -> void:
 	assert(0 <= c and c <= 1 and 0 <= r and r <= 1)
 	var i = c*2+r
 	arr[i] = val
 
-func at_v(c: int) -> Vector2:
+func get_col(c: int) -> Vector2:
 	return Vector2(at(c, 0), at(c, 1))
 
 func inverse() -> Matrix2D:
 	var result: Matrix2D = Matrix2D.new()
 	var fac: float = 1/(at(0,0)*at(1,1)-at(1,0)*at(0,1))
-	result.at_c(0,0, fac*at(1,1))
-	result.at_c(0,1, -fac*at(0,1))
-	result.at_c(1,0, -fac*at(1,0))
-	result.at_c(1,1, fac*at(0,0))
+	result.insert(0,0, fac*at(1,1))
+	result.insert(0,1, -fac*at(0,1))
+	result.insert(1,0, -fac*at(1,0))
+	result.insert(1,1, fac*at(0,0))
 	return result
 
 func print_mat() -> void:
@@ -72,5 +72,5 @@ static func mult_mat(m1: Matrix2D, m2: Matrix2D) -> Matrix2D:
 			var val: float = 0.0
 			for i in range(2):
 				val += m1.at(i, r) * m2.at(c, i)
-			result.at_c(c, r, val)
+			result.insert(c, r, val)
 	return result
