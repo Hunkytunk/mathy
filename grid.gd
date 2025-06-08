@@ -1,6 +1,5 @@
 extends Node2D
 
-@export var pixel_per_unit: int = 20
 @export var line_thickness: int = 2
 @export_group("Origo")
 @export var center_origo: bool = true
@@ -11,17 +10,17 @@ var color = Color.AQUAMARINE
 var color_weak = Color(color, 0.2)
 
 func _ready() -> void:
-	u_basis.set_arr_vec(Vector2(2, 2), Vector2(0, -2))
+	u_basis.set_arr_vec(Vector2(20, 0), Vector2(0, -20))
 	u_basis_inv = u_basis.inverse()
 	if center_origo:
 		origo = Vector2(floor(get_viewport_rect().size.x/2), floor(get_viewport_rect().size.y/2))
 
 func global_to_u(point: Vector2) -> Vector2:
-	var op = (point-origo)/pixel_per_unit
+	var op = point-origo
 	return u_basis_inv.mult_vec(op)
 	
 func u_to_px(point: Vector2) -> Vector2:
-	return origo+point*pixel_per_unit
+	return origo+point
 	
 func u_to_global(point: Vector2) -> Vector2:
 	var op_u = u_basis.mult_vec(point)
@@ -35,37 +34,31 @@ func _draw() -> void:
 	draw_grid()
 
 func draw_grid():
-	var screen_size_u: Vector2 = get_viewport_rect().size/pixel_per_unit
+	var screen_size_u: Vector2 = get_viewport_rect().size
 	
-	var size_u1: int
-	if u_basis.at(0, 0) == 0:
-		size_u1 = abs(ceil(screen_size_u.y/u_basis.at(0, 1)))
-	elif u_basis.at(0, 1) == 0:
-		size_u1 = abs(ceil(screen_size_u.x/u_basis.at(0, 0)))
-	else:
-		size_u1 = min(abs(ceil(screen_size_u.x/u_basis.at(0, 0))), abs(ceil(screen_size_u.y/u_basis.at(0, 1))))
-	var size_u2: int
-	if u_basis.at(1, 0) == 0:
-		size_u2 = abs(ceil(screen_size_u.y/u_basis.at(1, 1)))
-	elif u_basis.at(1, 1) == 0:
-		size_u2 = abs(ceil(screen_size_u.x/u_basis.at(1, 0)))
-	else:
-		size_u2 = min(abs(ceil(screen_size_u.x/u_basis.at(1, 0))), abs(ceil(screen_size_u.y/u_basis.at(1, 1))))
+	var size_u: Vector2 = Vector2(0, 0)
+	var corners: Array[Vector2] = [Vector2(0, 0), Vector2(screen_size_u.x, 0), Vector2(0, screen_size_u.y), screen_size_u]
 	
-	#These are dumb, fix
-	size_u1 = 100
-	size_u2 = 100
-	var pos = -size_u1*u_basis.get_col(0)
-	draw_line(u_to_px(pos-size_u2*u_basis.get_col(1)), u_to_px(pos+size_u2*u_basis.get_col(1)), color_weak, line_thickness)
-	for i in range(size_u1*2-1):
+	for i in range(corners.size()):
+		var corner_u = u_basis_inv.mult_vec(corners[i])
+		corner_u.x = ceil(abs(corner_u.x))
+		corner_u.y = ceil(abs(corner_u.y))
+		if corner_u.x > size_u.x:
+			size_u.x = corner_u.x
+		if corner_u.y > size_u.y:
+			size_u.y = corner_u.y
+	
+	var pos = -size_u.x*u_basis.get_col(0)
+	#draw_line(u_to_px(pos-size_u.y*u_basis.get_col(1)), u_to_px(pos+size_u.y*u_basis.get_col(1)), color_weak, line_thickness)
+	for i in range(size_u.x*2-1):
 		pos += u_basis.get_col(0)
-		draw_line(u_to_px(pos-size_u2*u_basis.get_col(1)), u_to_px(pos+size_u2*u_basis.get_col(1)), color_weak, line_thickness)
-	pos = -size_u2*u_basis.get_col(1)
-	draw_line(u_to_px(pos-size_u1*u_basis.get_col(1)), u_to_px(pos+size_u1*u_basis.get_col(1)), color_weak, line_thickness)
-	for i in range(size_u2*2-1):
+		draw_line(u_to_px(pos-size_u.y*u_basis.get_col(1)), u_to_px(pos+size_u.y*u_basis.get_col(1)), color_weak, line_thickness)
+	pos = -size_u.y*u_basis.get_col(1)
+	#draw_line(u_to_px(pos-size_u.x*u_basis.get_col(1)), u_to_px(pos+size_u.x*u_basis.get_col(1)), color_weak, line_thickness)
+	for i in range(size_u.y*2-1):
 		pos += u_basis.get_col(1)
-		draw_line(u_to_px(pos-size_u1*u_basis.get_col(0)), u_to_px(pos+size_u1*u_basis.get_col(0)), color_weak, line_thickness)
-
+		draw_line(u_to_px(pos-size_u.x*u_basis.get_col(0)), u_to_px(pos+size_u.x*u_basis.get_col(0)), color_weak, line_thickness)
+#
 	print(screen_size_u)
-	print(size_u1)
-	print(size_u2)
+	print(size_u.x)
+	print(size_u.y)
