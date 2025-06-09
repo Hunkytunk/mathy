@@ -9,11 +9,22 @@ var u_basis_inv: Matrix2D
 var color = Color.AQUAMARINE
 var color_weak = Color(color, 0.2)
 
+var rotation_matrix = Matrix2D.new()
 func _ready() -> void:
+	var theta = PI/(36*6)
+	rotation_matrix.set_arr_vec(Vector2(cos(theta), sin(theta)), Vector2(-sin(theta), cos(theta)))
 	u_basis.set_arr_vec(Vector2(20, 0), Vector2(0, -20))
 	u_basis_inv = u_basis.inverse()
 	if center_origo:
 		origo = Vector2(floor(get_viewport_rect().size.x/2), floor(get_viewport_rect().size.y/2))
+
+
+func _process(delta):
+	var c1 = u_basis.get_col(0)
+	c1 = rotation_matrix.mult_vec(c1)
+	u_basis.set_arr_vec(c1, u_basis.get_col(1))
+	u_basis_inv = u_basis.inverse()
+	queue_redraw()
 
 func global_to_u(point: Vector2) -> Vector2:
 	var op = point-origo
@@ -58,7 +69,3 @@ func draw_grid():
 	for i in range(size_u.y*2-1):
 		pos += u_basis.get_col(1)
 		draw_line(u_to_px(pos-size_u.x*u_basis.get_col(0)), u_to_px(pos+size_u.x*u_basis.get_col(0)), color_weak, line_thickness)
-#
-	print(screen_size_u)
-	print(size_u.x)
-	print(size_u.y)

@@ -34,6 +34,8 @@ func get_col(c: int) -> Vector2:
 
 func inverse() -> Matrix2D:
 	var result: Matrix2D = Matrix2D.new()
+	if abs(at(0,0)*at(1,1)-at(1,0)*at(0,1)) < 0.1:
+		return result
 	var fac: float = 1/(at(0,0)*at(1,1)-at(1,0)*at(0,1))
 	result.insert(0,0, fac*at(1,1))
 	result.insert(0,1, -fac*at(0,1))
