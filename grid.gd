@@ -1,9 +1,9 @@
 extends Node2D
 
 @export var line_thickness: int = 2
+@export var thicker_axis: bool = true
 @export_group("Origo")
 @export var center_origo: bool = true
-@export var origo: Vector2
 var u_basis: Matrix2D = Matrix2D.new()
 var u_basis_inv: Matrix2D
 var color = Color.AQUAMARINE
@@ -16,7 +16,7 @@ func _ready() -> void:
 	u_basis.set_arr_vec(Vector2(20, 0), Vector2(0, -20))
 	u_basis_inv = u_basis.inverse()
 	if center_origo:
-		origo = Vector2(floor(get_viewport_rect().size.x/2), floor(get_viewport_rect().size.y/2))
+		position = Vector2(floor(get_viewport_rect().size.x/2), floor(get_viewport_rect().size.y/2))
 
 
 func _process(delta):
@@ -26,23 +26,11 @@ func _process(delta):
 	u_basis_inv = u_basis.inverse()
 	queue_redraw()
 
-func global_to_u(point: Vector2) -> Vector2:
-	var op = point-origo
-	return u_basis_inv.mult_vec(op)
-	
-func u_to_px(point: Vector2) -> Vector2:
-	return origo+point
-	
-func u_to_global(point: Vector2) -> Vector2:
-	var op_u = u_basis.mult_vec(point)
-	return u_to_px(op_u)
-
-
 func _draw() -> void:
-	draw_circle(origo, 5, color)
-	draw_line(origo, u_to_px(u_basis.get_col(0)), color, 2.0)
-	draw_line(origo, u_to_px(u_basis.get_col(1)), color, 2.0)
 	draw_grid()
+	draw_circle(Vector2.ZERO, 5, Color.DIM_GRAY)
+	draw_line(Vector2.ZERO, u_basis.get_col(0), Color.DIM_GRAY, 2.0)
+	draw_line(Vector2.ZERO, u_basis.get_col(1), Color.DIM_GRAY, 2.0)
 
 func draw_grid():
 	var screen_size_u: Vector2 = get_viewport_rect().size
@@ -60,12 +48,18 @@ func draw_grid():
 			size_u.y = corner_u.y
 	
 	var pos = -size_u.x*u_basis.get_col(0)
-	#draw_line(u_to_px(pos-size_u.y*u_basis.get_col(1)), u_to_px(pos+size_u.y*u_basis.get_col(1)), color_weak, line_thickness)
-	for i in range(size_u.x*2-1):
+	draw_line(pos-size_u.y*u_basis.get_col(1), pos+size_u.y*u_basis.get_col(1), color_weak, line_thickness)
+	for i in range(size_u.x*2):
 		pos += u_basis.get_col(0)
-		draw_line(u_to_px(pos-size_u.y*u_basis.get_col(1)), u_to_px(pos+size_u.y*u_basis.get_col(1)), color_weak, line_thickness)
+		if i == size_u.x-1 and thicker_axis:
+			draw_line(pos-size_u.y*u_basis.get_col(1), pos+size_u.y*u_basis.get_col(1), Color(color_weak, 0.9), line_thickness*2)
+			continue
+		draw_line(pos-size_u.y*u_basis.get_col(1), pos+size_u.y*u_basis.get_col(1), color_weak, line_thickness)
 	pos = -size_u.y*u_basis.get_col(1)
-	#draw_line(u_to_px(pos-size_u.x*u_basis.get_col(1)), u_to_px(pos+size_u.x*u_basis.get_col(1)), color_weak, line_thickness)
-	for i in range(size_u.y*2-1):
+	draw_line(pos-size_u.x*u_basis.get_col(0), pos+size_u.x*u_basis.get_col(0), color_weak, line_thickness)
+	for i in range(size_u.y*2):
 		pos += u_basis.get_col(1)
-		draw_line(u_to_px(pos-size_u.x*u_basis.get_col(0)), u_to_px(pos+size_u.x*u_basis.get_col(0)), color_weak, line_thickness)
+		if i == size_u.y-1 and thicker_axis:
+			draw_line(pos-size_u.x*u_basis.get_col(0), pos+size_u.x*u_basis.get_col(0), Color(color_weak, 0.9), line_thickness*2)
+			continue
+		draw_line(pos-size_u.x*u_basis.get_col(0), pos+size_u.x*u_basis.get_col(0), color_weak, line_thickness)
