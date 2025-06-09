@@ -19,7 +19,7 @@ func _ready() -> void:
 		position = Vector2(floor(get_viewport_rect().size.x/2), floor(get_viewport_rect().size.y/2))
 
 
-func _process(delta):
+func _process(_delta):
 	var c1 = u_basis.get_col(0)
 	c1 = rotation_matrix.mult_vec(c1)
 	u_basis.set_arr_vec(c1, u_basis.get_col(1))
