@@ -4,7 +4,7 @@ extends Node2D
 var rotation_matrix = Matrix2D.new()
 
 func _ready():
-	var theta = PI/(36*60)
+	var theta = PI/(36*12)
 	rotation_matrix.set_arr_vec(Vector2(cos(theta), sin(theta)), Vector2(-sin(theta), cos(theta)))
 
 func _process(_delta):
