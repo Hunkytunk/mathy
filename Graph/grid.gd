@@ -2,15 +2,6 @@ extends Node2D
 
 
 @export var thicker_axis: bool = true
-@export_group("Origo")
-@export var center_origo: bool = true
-
-
-func _ready() -> void:
-	get_parent().u_basis.set_arr_vec(Vector2(20, 0), Vector2(0, -20))
-	get_parent().u_basis_inv = get_parent().u_basis.inverse()
-	if center_origo:
-		position = Vector2(floor(get_viewport_rect().size.x/2), floor(get_viewport_rect().size.y/2))
 
 func _draw() -> void:
 	draw_grid()
